@@ -40,6 +40,7 @@ namespace Project6
                 new DumbPlayer("Dumb Top Down", true),
                 new DumbPlayer("Dumb Bottom Up", false),
                 new RandomPlayer("Random"),
+                new Group3Player("Group3AI")
                 // Add your player here
             };
 
