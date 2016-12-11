@@ -23,7 +23,7 @@ namespace Project6
         {
             int gridSize = 15;
             var winCriteria = BattleShipGame.WinCriteriaEnum.ALL;
-            int numTrials = 500;
+            int numTrials = 5;
 
             // Define the ships to use for testing.
             Ship[] shipsToPlace = 
@@ -40,7 +40,7 @@ namespace Project6
                 new DumbPlayer("Dumb Top Down", true),
                 new DumbPlayer("Dumb Bottom Up", false),
                 new RandomPlayer("Random"),
-                // Add your player here
+                new Group3Player("Group3AI")
             };
 
             int[] wins = new int[players.Length];

@@ -46,7 +46,7 @@
     <Compile Include="Players\DumbPlayer.cs" />
     <Compile Include="Game\Grid.cs" />
     <Compile Include="Players\IPlayer.cs" />
-    <Compile Include="Players\TemplatePlayer.cs" />
+    <Compile Include="Players\Group3Player.cs" />
     <Compile Include="Ships\PatrolBoat.cs" />
     <Compile Include="Game\Position.cs" />
     <Compile Include="Game\Fleet.cs" />
