@@ -8,7 +8,6 @@ namespace Project6
     public class Group3Player : Player
     {
         private int[,] opponentGrid;
-        public Position attackPosition { get; set; }
 
 
         public Group3Player(String name) :
@@ -27,7 +26,7 @@ namespace Project6
         {
             base.StartGame(game);
             opponentGrid = new int[Game.GridSize, Game.GridSize];
-            attackPosition = new Position();
+            //attackPosition = new Position();
 
             for (int i = 0; i<Game.GridSize; i++)
             {
@@ -62,16 +61,28 @@ namespace Project6
         public override Position Attack()
         {
             Position p;
+            int row = 0;
+            int column = 0;
+            int shipSearchLength = 0;
+            int currentProbability = 0;
+            int previousProbability = 0;
+           
             do
             {
                 for (int i = 0; i < Game.GridSize; i++)
                 {
                     for (int j = 0; j < Game.GridSize; j++)
                     {
-                        
+                        currentProbability = opponentGrid[i, j];
+                        if(currentProbability > previousProbability)
+                        {
+                            i = row;
+                            j = column;
+                        }
+                        previousProbability = opponentGrid[i, j]; 
                     }
                 }
-                p = attackPosition;
+                p = new Position(row, column);
             } while (Game.HitOrMissAt(p) != BattleShipGame.HitOrMissEnum.UNKNOWN);
             return p;
         }
