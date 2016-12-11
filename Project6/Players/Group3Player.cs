@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Project6
 {
-	public class TemplatePlayer : Player
+	public class Group3Player : Player
 	{
-		public TemplatePlayer(String name) :
+		public Group3Player(String name) :
 			base(name)
 		{
 
