@@ -7,6 +7,9 @@ namespace Project6
 {
 	public class Group3Player : Player
 	{
+		private int[,] opponentGrid;
+
+
 		public Group3Player(String name) :
 			base(name)
 		{
@@ -22,7 +25,29 @@ namespace Project6
 		public override void StartGame(BattleShipGame game)
 		{
 			base.StartGame(game);
-			// Initialize the player data structures.
+			opponentGrid = new int[Game.GridSize, Game.GridSize];
+			for (int i = 0; i<Game.GridSize; i++)
+			{
+				for (int j = 0; j < Game.GridSize; j++)
+				{
+					if(i <= (Game.GridSize / 6) && j <= (Game.GridSize / 6))
+					{
+							opponentGrid[i, j] = 1;
+					}
+					else if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4))
+					{
+						opponentGrid[i, j] = 2;
+					}
+					else if (i <= (Game.GridSize / 2) && j <= (Game.GridSize / 2))
+					{
+						opponentGrid[i, j] = 3;
+					}
+					else
+					{
+						opponentGrid[i, j] = 4;
+					}
+				}
+			}
 		}
 
 		/// <summary>
