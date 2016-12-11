@@ -7,7 +7,7 @@ namespace Project6
 {
     public class Group3Player : Player
     {
-        private int[,] opponentGrid;
+        private double[,] opponentGrid;
 
 
         public Group3Player(String name) :
@@ -25,7 +25,7 @@ namespace Project6
         public override void StartGame(BattleShipGame game)
         {
             base.StartGame(game);
-            opponentGrid = new int[Game.GridSize, Game.GridSize];
+            opponentGrid = new double[Game.GridSize, Game.GridSize];
 
             for (int i = 0; i<Game.GridSize; i++)
             {
@@ -65,33 +65,45 @@ namespace Project6
             int row = 0;
             int column = 0;
             int shipSearchLength = 0;
-            int currentProbability = 0;
-            int previousProbability = 0;
-            
+            double currentProbability = 0;
+            double previousProbability = 0;
+
             //do
             //{
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    currentProbability = opponentGrid[i, j];
+                    if (currentProbability > previousProbability)
+                    {
+                        row = i;
+                        column = j;
+                    }
+                    previousProbability = opponentGrid[i, j];
+                }
+            }
 
 
 
-                
-                //This section of code will pick the position in the grid with the highest probability of 
-                //hitting a ship with the current shipSearchLength
-                //for (int i = 0; i < Game.GridSize; i++)
-                //{
-                  //  for (int j = 0; j < Game.GridSize; j++)
-                 //   {
-                   //     currentProbability = opponentGrid[i, j];
-                   //     if(currentProbability > previousProbability)
-                   //     {
-                   //         i = row;
-                   //         j = column;
-                  //      }
-                  //      previousProbability = opponentGrid[i, j]; 
-                 //   }
-               // }
+            //This section of code will pick the position in the grid with the highest probability of 
+            //hitting a ship with the current shipSearchLength
+            for (int i = 0; i < Game.GridSize; i++)
+                {
+                    for (int j = 0; j < Game.GridSize; j++)
+                    {
+                        currentProbability = opponentGrid[i, j];
+                        if(currentProbability > previousProbability)
+                        {
+                            row = i;
+                            column = j;
+                        }
+                        previousProbability = opponentGrid[i, j]; 
+                    }
+                }
                 p = new Position(row, column); //Sets the position to be attatcked,
                 
-           // } while (Game.HitOrMissAt(p) != BattleShipGame.HitOrMissEnum.UNKNOWN);
+            //} while (Game.HitOrMissAt(p) != BattleShipGame.HitOrMissEnum.UNKNOWN);
             return p;
         }
 
