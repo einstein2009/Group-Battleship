@@ -64,23 +64,44 @@ namespace Project6
             Position p;
             int row = 0;
             int column = 0;
-            int shipSearchLength = 0;
+            int shipSearchLength = 4;
             double currentProbability = 0;
             double previousProbability = 0;
+            bool addToProbability = true;
+
 
             //do
             //{
+
+
+
+            //This section assigns a higher probability to cells that can contain the ship of 
+            //the current shipSearchLength
             for (int i = 0; i < Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    currentProbability = opponentGrid[i, j];
-                    if (currentProbability > previousProbability)
+                    if(opponentGrid [i,j] >= 1)
                     {
-                        row = i;
-                        column = j;
+                        for (int s = 0; s < shipSearchLength; s++)
+                        {
+                            if (j + s < Game.GridSize)
+                            {
+                                if (opponentGrid[i, j + s] >= 1)
+                                {
+                                }
+                                else
+                                {
+                                    addToProbability = false;
+                                }
+                            }
+                        }
+                        
                     }
-                    previousProbability = opponentGrid[i, j];
+                    if (addToProbability)
+                    {
+                        opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                    }
                 }
             }
 
@@ -118,7 +139,12 @@ namespace Project6
         {
             if (!Game.ShipSunkAt(p))
             {
-            // Strategy for dealing with Positions near the hit.
+                opponentGrid[p.Row, p.Column] = -1;
+                // Strategy for dealing with Positions near the hit.
+            }
+            else
+            {
+                opponentGrid[p.Row, p.Column] = 0;
             }
         }
     }
