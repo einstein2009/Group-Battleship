@@ -68,12 +68,19 @@ namespace Project6
             double currentProbability = 0;
             double previousProbability = 0;
             bool addToProbability = true;
-
-
-            //do
-            //{
-
-
+            
+            //This section sets all missed attacks to 0 
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    p = new Position(i, j);
+                    if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.MISS)
+                    {
+                        opponentGrid[i, j] = 0;
+                    }
+                }
+            }
 
             //This section assigns a higher probability to cells that can contain the ship of 
             //the current shipSearchLength
@@ -83,11 +90,13 @@ namespace Project6
                 {
                     if(opponentGrid [i,j] >= 1)
                     {
+                        //Checks cells to the right
                         for (int s = 0; s < shipSearchLength; s++)
                         {
-                            if (j + s < Game.GridSize)
+                            int k = j;
+                            if (k + s < Game.GridSize)
                             {
-                                if (opponentGrid[i, j + s] >= 1)
+                                if (opponentGrid[i, k + s] >= 1)
                                 {
                                 }
                                 else
@@ -96,16 +105,42 @@ namespace Project6
                                 }
                             }
                         }
-                        
-                    }
-                    if (addToProbability)
-                    {
-                        opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                        if (addToProbability)
+                        {
+                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                        }
+                        else
+                        {
+                            addToProbability = true;
+                        }
+
+                        //Checks cells to the left
+                        for (int s = 0; s < shipSearchLength; s++)
+                        {
+                            int k = j;
+                            if (k - s >= 0)
+                            {
+                                if (opponentGrid[i, k - s] >= 1)
+                                {
+                                }
+                                else
+                                {
+                                    addToProbability = false;
+                                }
+                            }
+                        }
+                        if (addToProbability)
+                        {
+                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                        }
+                        else
+                        {
+                            addToProbability = true;
+                        }
+
                     }
                 }
             }
-
-
 
             //This section of code will pick the position in the grid with the highest probability of 
             //hitting a ship with the current shipSearchLength
@@ -123,8 +158,6 @@ namespace Project6
                     }
                 }
                 p = new Position(row, column); //Sets the position to be attatcked,
-                
-            //} while (Game.HitOrMissAt(p) != BattleShipGame.HitOrMissEnum.UNKNOWN);
             return p;
         }
 
@@ -140,6 +173,15 @@ namespace Project6
             if (!Game.ShipSunkAt(p))
             {
                 opponentGrid[p.Row, p.Column] = -1;
+
+                if (p.Row > 0)
+                    opponentGrid [p.Row - 1, p.Column] = opponentGrid[p.Row - 1, p.Column] + 1000;
+                if (p.Row < Game.GridSize - 1)
+                    opponentGrid[p.Row + 1, p.Column] = opponentGrid[p.Row + 1, p.Column] + 1000;
+                if (p.Column > 0)
+                    opponentGrid[p.Row, p.Column -1] = opponentGrid[p.Row, p.Column -1] + 1000;
+                if (p.Column < Game.GridSize - 1)
+                    opponentGrid[p.Row, p.Column + 1] = opponentGrid[p.Row, p.Column + 1] + 1000;
                 // Strategy for dealing with Positions near the hit.
             }
             else
