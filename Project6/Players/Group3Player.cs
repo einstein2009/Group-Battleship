@@ -27,7 +27,7 @@ namespace Project6
             base.StartGame(game);
             opponentGrid = new double[Game.GridSize, Game.GridSize];
 
-            for (int i = 0; i < Game.GridSize; i++)
+            for (int i = 0; i<Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
@@ -62,14 +62,80 @@ namespace Project6
             Position p;
             int row = 0;
             int column = 0;
+            int shipSearchLength = 4;
             double currentProbability = 0;
             double previousProbability = 0;
+            bool addToProbability = true;
 
-            
             AttackGridReset();
             HitAttacks();
             SurroundingHitCell();
             MissedAttacks();
+
+
+            /*
+            
+
+            //This section assigns a higher probability to cells that can contain the ship of 
+            //the current shipSearchLength
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    if(opponentGrid [i,j] >= 1)
+                    {
+                        //Checks cells to the right
+                        for (int s = 0; s < shipSearchLength; s++)
+                        {
+                            int k = j;
+                            if (k + s < Game.GridSize)
+                            {
+                                if (opponentGrid[i, k + s] >= 1)
+                                {
+                                }
+                                else
+                                {
+                                    addToProbability = false;
+                                }
+                            }
+                        }
+                        if (addToProbability)
+                        {
+                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                        }
+                        else
+                        {
+                            addToProbability = true;
+                        }
+
+                        //Checks cells to the left
+                        for (int s = 0; s < shipSearchLength; s++)
+                        {
+                            int k = j;
+                            if (k - s >= 0)
+                            {
+                                if (opponentGrid[i, k - s] >= 1)
+                                {
+                                }
+                                else
+                                {
+                                    addToProbability = false;
+                                }
+                            }
+                        }
+                        if (addToProbability)
+                        {
+                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                        }
+                        else
+                        {
+                            addToProbability = true;
+                        }
+
+                    }
+                }
+            }
+            */
 
             //This section of code will pick the position in the grid with the highest probability of 
             //hitting a ship with the current shipSearchLength
@@ -78,16 +144,15 @@ namespace Project6
                 for (int j = 0; j < Game.GridSize; j++)
                 {
                     currentProbability = opponentGrid[i, j];
-                    if (currentProbability > previousProbability)
+                    if(currentProbability > previousProbability)
                     {
                         row = i;
                         column = j;
                     }
-                    previousProbability = opponentGrid[i, j];
+                    previousProbability = opponentGrid[i, j]; 
                 }
             }
             p = new Position(row, column); //Sets the position to be attacked,
-
             return p;
         }
 
@@ -100,8 +165,14 @@ namespace Project6
         /// <param name="p">Hit position</param>
         public override void Hit(Position p)
         {
-            opponentGrid[p.Row, p.Column] = -1;
+                opponentGrid[p.Row, p.Column] = -1;
         }
+
+
+
+
+
+
 
         //Resets Grid so that the probability doesn't get messed up
         public void AttackGridReset()
@@ -131,27 +202,7 @@ namespace Project6
         }
 
         //Sets cells surrounding a hit cell to a high probability
-        public void SurroundingHitCell()
-        {
-
-            for (int i = 0; i < Game.GridSize; i++)
-            {
-                for (int j = 0; j < Game.GridSize; j++)
-                {
-                    if (i > 0 && opponentGrid[i,j] >= 1)
-                        opponentGrid[i - 1, j] = opponentGrid[i - 1, j] + 10;
-                    if (i < Game.GridSize - 1 && opponentGrid[i, j] >= 1)
-                        opponentGrid[i + 1, j] = opponentGrid[i + 1, j] + 10;
-                    if (j > 0 && opponentGrid[i, j] >= 1)
-                        opponentGrid[i, j - 1] = opponentGrid[i, j - 1] + 10;
-                    if (j < Game.GridSize - 1 && opponentGrid[i, j] >= 1)
-                        opponentGrid[i, j + 1] = opponentGrid[i, j + 1] + 10;
-                }
-            }
-        }
-
-        //Manage Hit Attacks
-        public void HitAttacks()
+        public void SurroundingHitCell ()
         {
             Position p;
             for (int i = 0; i < Game.GridSize; i++)
@@ -159,9 +210,16 @@ namespace Project6
                 for (int j = 0; j < Game.GridSize; j++)
                 {
                     p = new Position(i, j);
-                    if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
+                    if (opponentGrid [i,j] == -1)
                     {
-                        opponentGrid[i, j] = -1;
+                        if (i > 0 && opponentGrid[i,j] >=1)
+                            opponentGrid[i - 1, j] = opponentGrid[i - 1, j] + 10;
+                        if (i < Game.GridSize - 1 && opponentGrid[i, j] >= 1)
+                            opponentGrid[i + 1, j] = opponentGrid[i + 1, j] + 10;
+                        if (j > 0 && opponentGrid[i, j] >= 1)
+                            opponentGrid[i, j - 1] = opponentGrid[i, j - 1] + 10;
+                        if (j < Game.GridSize - 1 && opponentGrid[i, j] >= 1)
+                            opponentGrid[i, j + 1] = opponentGrid[i, j + 1] + 10;
                     }
                 }
             }
@@ -183,100 +241,22 @@ namespace Project6
                 }
             }
         }
-        /*
-        public void AddToProbability()
-        {
-            int shipSearchLength = 4;
-            bool addToProbability = true;
 
-            //This section assigns a higher probability to cells that can contain the ship of 
-            //the current shipSearchLength
+        //Manage Hit Attacks
+        public void HitAttacks()
+        {
+            Position p;
             for (int i = 0; i < Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    if (opponentGrid[i, j] >= 1)
+                    p = new Position(i, j);
+                    if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
                     {
-                        //Checks cells to the right
-                        for (int s = 0; s < shipSearchLength; s++)
-                        {
-                            int k = j;
-                            if (k + s < Game.GridSize)
-                            {
-                                if (opponentGrid[i, k + s] >= 1)
-                                {
-                                    addToProbability = true;
-                                }
-                                else
-                                {
-                                    addToProbability = false;
-                                }
-                            }
-                        }
-
-                        //Checks cells to the left
-                        for (int s = 0; s < shipSearchLength; s++)
-                        {
-                            int k = j;
-                            if (k - s >= 0)
-                            {
-                                if (opponentGrid[i, k - s] >= 1)
-                                {
-                                    addToProbability = true;
-                                }
-                                else
-                                {
-                                    addToProbability = false;
-                                }
-                            }
-                        }
-
-                        //Checks cells above
-                        for (int s = 0; s < shipSearchLength; s++)
-                        {
-                            int k = i;
-                            if (k + s < Game.GridSize)
-                            {
-                                if (opponentGrid[k + s, j] >= 1)
-                                {
-                                    addToProbability = true;
-                                }
-                                else
-                                {
-                                    addToProbability = false;
-                                }
-                            }
-                        }
-
-                        //Checks cells underneath
-                        for (int s = 0; s < shipSearchLength; s++)
-                        {
-                            int k = i;
-                            if (k + s < 0)
-                            {
-                                if (opponentGrid[k - s, j] >= 1)
-                                {
-                                    addToProbability = true;
-                                }
-                                else
-                                {
-                                    addToProbability = false;
-                                }
-                            }
-                        }
-                        if (addToProbability)
-                        {
-                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
-                        }
-                        else
-                        {
-                            addToProbability = true;
-                        }
+                        opponentGrid[i, j] = -1;
                     }
                 }
-
             }
         }
-        */
     }
 }
