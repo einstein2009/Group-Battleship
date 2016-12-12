@@ -60,12 +60,13 @@ namespace Project6
         public override Position Attack()
         {
             Position p;
-            p = nextProbable();
-       
-            AttackGridReset();
-            SurroundingHitCell(p);
-            MissedAttacks();
             
+            AttackGridReset();
+            SurroundingHitCell();
+            MissedAttacks();
+
+            p = nextProbable();
+
             return p;
         }
 
@@ -116,21 +117,21 @@ namespace Project6
         }
 
         //Sets cells surrounding a hit cell to a high probability
-        public void SurroundingHitCell(Position p)
+        public void SurroundingHitCell()
         {
-            
+
             for (int i = 0; i < Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
                     if (i > 0)
                         opponentGrid[i - 1, j] = opponentGrid[i - 1, j] + 10;
-                    if (p.Row < Game.GridSize - 1)
-                        opponentGrid[p.Row + 1, p.Column] = opponentGrid[p.Row + 1, p.Column] + 1000;
+                    if (i < Game.GridSize - 1)
+                        opponentGrid[i + 1, j] = opponentGrid[i + 1, j] + 10;
                     if (j > 0)
-                        opponentGrid[p.Row, p.Column - 1] = opponentGrid[p.Row, p.Column - 1] + 1000;
-                    if (p.Column < Game.GridSize - 1)
-                        opponentGrid[p.Row, p.Column + 1] = opponentGrid[p.Row, p.Column + 1] + 1000;
+                        opponentGrid[i, j - 1] = opponentGrid[i, j - 1] + 10;
+                    if (j < Game.GridSize - 1)
+                        opponentGrid[i, j + 1] = opponentGrid[i, j + 1] + 10;
                 }
             }
         }
@@ -185,14 +186,7 @@ namespace Project6
                                 }
                             }
                         }
-                        if (addToProbability)
-                        {
-                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
-                        }
-                        else
-                        {
-                            addToProbability = true;
-                        }
+                        
                         //Checks cells to the left
                         for (int s = 0; s < shipSearchLength; s++)
                         {
@@ -200,6 +194,40 @@ namespace Project6
                             if (k - s >= 0)
                             {
                                 if (opponentGrid[i, k - s] >= 1)
+                                {
+                                    addToProbability = true;
+                                }
+                                else
+                                {
+                                    addToProbability = false;
+                                }
+                            }
+                        }
+
+                        //Checks cells above
+                        for (int s = 0; s < shipSearchLength; s++)
+                        {
+                            int k = i;
+                            if (k + s < Game.GridSize)
+                            {
+                                if (opponentGrid[k + s, j] >= 1)
+                                {
+                                    addToProbability = true;
+                                }
+                                else
+                                {
+                                    addToProbability = false;
+                                }
+                            }
+                        }
+
+                        //Checks cells underneath
+                        for (int s = 0; s < shipSearchLength; s++)
+                        {
+                            int k = i;
+                            if (k + s < 0)
+                            {
+                                if (opponentGrid[k - s, j] >= 1)
                                 {
                                     addToProbability = true;
                                 }
@@ -219,8 +247,8 @@ namespace Project6
                         }
                     }
                 }
-            }
 
+            }
 
 
             //This section of code will pick the position in the grid with the highest probability of 
