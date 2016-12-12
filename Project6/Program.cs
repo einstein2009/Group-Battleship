@@ -15,7 +15,7 @@ using System;
 
 //delete this row, it is only added to push the project.
 
-namespace Project6
+namespace Gsd311.Week6.Group3
 {
     class Program
     {
@@ -40,9 +40,9 @@ namespace Project6
                 new DumbPlayer("Dumb Top Down", true),
                 new DumbPlayer("Dumb Bottom Up", false),
                 new RandomPlayer("Random"),
-                new Group3Player("Group3AI")// Added our player here
+                new Group3Player("Group3AI") //Added our player
             };
-
+            
             int[] wins = new int[players.Length];
             for (int trial = 0; trial < numTrials; ++trial)
             {
@@ -67,7 +67,7 @@ namespace Project6
                         }
                     } while (!shipAddedFlag);
                 }
-
+                
                 // Setup a game for each player and let the player know we are starting.
                 BattleShipGame[] games = new BattleShipGame[players.Length];
                 for (int i = 0; i < players.Length; ++i)
@@ -75,11 +75,12 @@ namespace Project6
                     games[i] = new BattleShipGame(gridSize, players[i], shipsToPlace, winCriteria);
                     players[i].StartGame(games[i]);
                 }
-
+                
                 // Play the game seeing who wins first.
                 bool gameOver = false;
                 while (!gameOver)
                 {
+                    
                     for (int i = 0; i < games.Length; ++i)
                     {
                         games[i].Turn();
@@ -92,6 +93,7 @@ namespace Project6
                             games[i].Draw();
                         }
                     }
+                    
                 }
             }
 

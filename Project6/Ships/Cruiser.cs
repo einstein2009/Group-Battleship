@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Project6
+namespace Gsd311.Week6.Group3
 {
     public class Cruiser : Ship
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Project6
+namespace Gsd311.Week6.Group3
 {
     public class DumbPlayer : Player
     {

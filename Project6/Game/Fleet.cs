@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Project6
+namespace Gsd311.Week6.Group3
 {
     class ShipCollisionException : Exception
     {
