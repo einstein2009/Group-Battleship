@@ -68,8 +68,10 @@ namespace Project6
             bool addToProbability = true;
 
             AttackGridReset();
+            HitAttacks();
             SurroundingHitCell();
             MissedAttacks();
+
 
             /*
             
@@ -163,15 +165,14 @@ namespace Project6
         /// <param name="p">Hit position</param>
         public override void Hit(Position p)
         {
-            if (!Game.ShipSunkAt(p))
-            {
                 opponentGrid[p.Row, p.Column] = -1;
-            }
-            else
-            {
-                opponentGrid[p.Row, p.Column] = 0;
-            }
         }
+
+
+
+
+
+
 
         //Resets Grid so that the probability doesn't get messed up
         public void AttackGridReset()
@@ -180,19 +181,19 @@ namespace Project6
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    if (i <= (Game.GridSize / 6) && j <= (Game.GridSize / 6) && opponentGrid[i, j] > 1)
+                    if (i <= (Game.GridSize / 6) && j <= (Game.GridSize / 6) && opponentGrid[i, j] >= 1)
                     {
                         opponentGrid[i, j] = 1;
                     }
-                    else if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4) && opponentGrid[i, j] > 1)
+                    else if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4) && opponentGrid[i, j] >= 1)
                     {
                         opponentGrid[i, j] = 1.25;
                     }
-                    else if (i <= (Game.GridSize / 2) && j <= (Game.GridSize / 2) && opponentGrid[i, j] > 1)
+                    else if (i <= (Game.GridSize / 2) && j <= (Game.GridSize / 2) && opponentGrid[i, j] >= 1)
                     {
                         opponentGrid[i, j] = 1.5;
                     }
-                    else if (opponentGrid[i, j] > 1)
+                    else if (opponentGrid[i, j] >= 1)
                     {
                         opponentGrid[i, j] = 1.75;
                     }
@@ -203,18 +204,23 @@ namespace Project6
         //Sets cells surrounding a hit cell to a high probability
         public void SurroundingHitCell ()
         {
+            Position p;
             for (int i = 0; i < Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    if (i > 0)
-                        opponentGrid[i - 1, j] = opponentGrid[i - 1, j] + 10;
-                    if (p.Row < Game.GridSize - 1)
-                        opponentGrid[p.Row + 1, p.Column] = opponentGrid[p.Row + 1, p.Column] + 1000;
-                    if (j > 0)
-                        opponentGrid[p.Row, p.Column - 1] = opponentGrid[p.Row, p.Column - 1] + 1000;
-                    if (p.Column < Game.GridSize - 1)
-                        opponentGrid[p.Row, p.Column + 1] = opponentGrid[p.Row, p.Column + 1] + 1000;
+                    p = new Position(i, j);
+                    if (opponentGrid [i,j] == -1)
+                    {
+                        if (i > 0 && opponentGrid[i,j] >=1)
+                            opponentGrid[i - 1, j] = opponentGrid[i - 1, j] + 10;
+                        if (i < Game.GridSize - 1 && opponentGrid[i, j] >= 1)
+                            opponentGrid[i + 1, j] = opponentGrid[i + 1, j] + 10;
+                        if (j > 0 && opponentGrid[i, j] >= 1)
+                            opponentGrid[i, j - 1] = opponentGrid[i, j - 1] + 10;
+                        if (j < Game.GridSize - 1 && opponentGrid[i, j] >= 1)
+                            opponentGrid[i, j + 1] = opponentGrid[i, j + 1] + 10;
+                    }
                 }
             }
         }
@@ -231,6 +237,23 @@ namespace Project6
                     if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.MISS)
                     {
                         opponentGrid[i, j] = 0;
+                    }
+                }
+            }
+        }
+
+        //Manage Hit Attacks
+        public void HitAttacks()
+        {
+            Position p;
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    p = new Position(i, j);
+                    if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
+                    {
+                        opponentGrid[i, j] = -1;
                     }
                 }
             }
