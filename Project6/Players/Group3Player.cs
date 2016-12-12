@@ -64,6 +64,7 @@ namespace Project6
             AttackGridReset();
             SurroundingHitCell();
             MissedAttacks();
+            addToProbability();
 
             p = nextProbable();
 
@@ -88,7 +89,6 @@ namespace Project6
                 opponentGrid[p.Row, p.Column] = 0;
             }
         }
-
         //Resets Grid so that the probability doesn't get messed up
         public void AttackGridReset()
         {
@@ -159,6 +159,27 @@ namespace Project6
             int column = 0;
             double currentProbability = 0;
             double previousProbability = 0;
+           
+            //This section of code will pick the position in the grid with the highest probability of 
+            //hitting a ship with the current shipSearchLength
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    currentProbability = opponentGrid[i, j];
+                    if (currentProbability > previousProbability)
+                    {
+                        row = i;
+                        column = j;
+                    }
+                    previousProbability = opponentGrid[i, j];
+                }
+            }
+            return new Position(row, column); //Sets the position to be attacked,
+        }
+
+        public void addToProbability()
+        {
             int shipSearchLength = 4;
             bool addToProbability = true;
 
@@ -186,7 +207,7 @@ namespace Project6
                                 }
                             }
                         }
-                        
+
                         //Checks cells to the left
                         for (int s = 0; s < shipSearchLength; s++)
                         {
@@ -249,24 +270,6 @@ namespace Project6
                 }
 
             }
-
-
-            //This section of code will pick the position in the grid with the highest probability of 
-            //hitting a ship with the current shipSearchLength
-            for (int i = 0; i < Game.GridSize; i++)
-            {
-                for (int j = 0; j < Game.GridSize; j++)
-                {
-                    currentProbability = opponentGrid[i, j];
-                    if (currentProbability > previousProbability)
-                    {
-                        row = i;
-                        column = j;
-                    }
-                    previousProbability = opponentGrid[i, j];
-                }
-            }
-            return new Position(row, column); //Sets the position to be attacked,
         }
     }
 }
