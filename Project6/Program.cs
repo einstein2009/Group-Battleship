@@ -15,7 +15,7 @@ using System;
 
 //delete this row, it is only added to push the project.
 
-namespace Project6
+namespace Gsd311.Week6.Group3
 {
     class Program
     {

@@ -13,7 +13,7 @@
 // ***********************************************************************
 using System;
 
-namespace Project6
+namespace Gsd311.Week6.Group3
 {
     /// <summary>
     /// Class that represents the playing board of the game Battleship.

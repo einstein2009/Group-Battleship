@@ -13,7 +13,7 @@
 // ***********************************************************************
 using System;
 
-namespace Project6
+namespace Gsd311.Week6.Group3
 {
     /// <summary>
     /// Abstract Ship class to represent those features common

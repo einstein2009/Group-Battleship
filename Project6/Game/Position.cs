@@ -13,7 +13,7 @@
 // ***********************************************************************
 using System;
 
-namespace Project6
+namespace Gsd311.Week6.Group3
 {
     /// <summary>
     /// Immutable structure to represent a 2D position on the grid.
