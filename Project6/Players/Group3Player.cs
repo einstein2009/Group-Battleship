@@ -1,4 +1,19 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : Project6
+// Author           : Matthew Wyant
+// Created          : 12-11-2016
+//
+// Last Modified By : Matthew Wyant
+// Last Modified On : 12-12-2016
+// ***********************************************************************
+// <copyright file="Group3Player.cs" company="">
+//     Copyright ©  2016
+// </copyright>
+// <summary>Group3 AI player class</summary>
+// ***********************************************************************
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -113,11 +128,11 @@ namespace Project6
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    if (i <= (Game.GridSize / 6) && j <= (Game.GridSize / 6))
+                    if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4))
                     {
                         opponentGrid[i, j] = 1;
                     }
-                    else if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4))
+                    else if (i <= (Game.GridSize / 3) && j <= (Game.GridSize / 3))
                     {
                         opponentGrid[i, j] = 1.25;
                     }
@@ -137,13 +152,12 @@ namespace Project6
         //TBD: This could use more work
         public void SurroundingHitCell ()
         {
-            int probabilityInt = 0;
+            int probabilityInt = 10;
             Position p;
             for (int i = 0; i < Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    probabilityInt = probabilityInt + 5;
                     p = new Position(i, j);
                     if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
                     {
@@ -229,6 +243,8 @@ namespace Project6
             bool addToProbability = true;
             Position p;
 
+            //foreach ()
+
             for (int i = 0; i < Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
@@ -254,7 +270,7 @@ namespace Project6
                         }
                         if (addToProbability)
                         {
-                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                            opponentGrid[i, j] = opponentGrid[i, j] + 2;
                         }
                         else
                         {
@@ -279,7 +295,7 @@ namespace Project6
                         }
                         if (addToProbability)
                         {
-                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                            opponentGrid[i, j] = opponentGrid[i, j] + 2;
                         }
                         else
                         {
@@ -304,7 +320,7 @@ namespace Project6
                         }
                         if (addToProbability)
                         {
-                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                            opponentGrid[i, j] = opponentGrid[i, j] + 2;
                         }
                         else
                         {
@@ -329,7 +345,7 @@ namespace Project6
                         }
                         if (addToProbability)
                         {
-                            opponentGrid[i, j] = opponentGrid[i, j] + 1;
+                            opponentGrid[i, j] = opponentGrid[i, j] + 2;
                         }
                         else
                         {

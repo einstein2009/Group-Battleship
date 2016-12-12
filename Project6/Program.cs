@@ -3,8 +3,8 @@
 // Author           : Richard Lesh
 // Created          : 11-23-2016
 //
-// Last Modified By : Richard Lesh
-// Last Modified On : 11-25-2016
+// Last Modified By : Matthew Wyant
+// Last Modified On : 12-12-2016
 // ***********************************************************************
 // <copyright file="Program.cs" company="">
 //     Copyright ©  2016
@@ -22,8 +22,8 @@ namespace Project6
         static void Main(string[] args)
         {
             int gridSize = 15;
-            var winCriteria = BattleShipGame.WinCriteriaEnum.ALL;
-            int numTrials = 500;
+            var winCriteria = BattleShipGame.WinCriteriaEnum.BATTLESHIP; //Changed for testing purposes,
+            int numTrials = 10; //Lowered for testing purposes
 
             // Define the ships to use for testing.
             Ship[] shipsToPlace = 
