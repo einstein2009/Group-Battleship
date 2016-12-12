@@ -60,13 +60,33 @@ namespace Project6
         public override Position Attack()
         {
             Position p;
+            int row = 0;
+            int column = 0;
+            double currentProbability = 0;
+            double previousProbability = 0;
+
             
             AttackGridReset();
+            HitAttacks();
             SurroundingHitCell();
             MissedAttacks();
-            addToProbability();
 
-            p = nextProbable();
+            //This section of code will pick the position in the grid with the highest probability of 
+            //hitting a ship with the current shipSearchLength
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    currentProbability = opponentGrid[i, j];
+                    if (currentProbability > previousProbability)
+                    {
+                        row = i;
+                        column = j;
+                    }
+                    previousProbability = opponentGrid[i, j];
+                }
+            }
+            p = new Position(row, column); //Sets the position to be attacked,
 
             return p;
         }
@@ -80,15 +100,9 @@ namespace Project6
         /// <param name="p">Hit position</param>
         public override void Hit(Position p)
         {
-            if (!Game.ShipSunkAt(p))
-            {
-                opponentGrid[p.Row, p.Column] = -1;
-            }
-            else
-            {
-                opponentGrid[p.Row, p.Column] = 0;
-            }
+            opponentGrid[p.Row, p.Column] = -1;
         }
+
         //Resets Grid so that the probability doesn't get messed up
         public void AttackGridReset()
         {
@@ -96,19 +110,19 @@ namespace Project6
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    if (i <= (Game.GridSize / 6) && j <= (Game.GridSize / 6) && opponentGrid[i, j] > 1)
+                    if (i <= (Game.GridSize / 6) && j <= (Game.GridSize / 6) && opponentGrid[i, j] >= 1)
                     {
                         opponentGrid[i, j] = 1;
                     }
-                    else if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4) && opponentGrid[i, j] > 1)
+                    else if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4) && opponentGrid[i, j] >= 1)
                     {
                         opponentGrid[i, j] = 1.25;
                     }
-                    else if (i <= (Game.GridSize / 2) && j <= (Game.GridSize / 2) && opponentGrid[i, j] > 1)
+                    else if (i <= (Game.GridSize / 2) && j <= (Game.GridSize / 2) && opponentGrid[i, j] >= 1)
                     {
                         opponentGrid[i, j] = 1.5;
                     }
-                    else if (opponentGrid[i, j] > 1)
+                    else if (opponentGrid[i, j] >= 1)
                     {
                         opponentGrid[i, j] = 1.75;
                     }
@@ -124,14 +138,31 @@ namespace Project6
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    if (i > 0)
+                    if (i > 0 && opponentGrid[i,j] >= 1)
                         opponentGrid[i - 1, j] = opponentGrid[i - 1, j] + 10;
-                    if (i < Game.GridSize - 1)
+                    if (i < Game.GridSize - 1 && opponentGrid[i, j] >= 1)
                         opponentGrid[i + 1, j] = opponentGrid[i + 1, j] + 10;
-                    if (j > 0)
+                    if (j > 0 && opponentGrid[i, j] >= 1)
                         opponentGrid[i, j - 1] = opponentGrid[i, j - 1] + 10;
-                    if (j < Game.GridSize - 1)
+                    if (j < Game.GridSize - 1 && opponentGrid[i, j] >= 1)
                         opponentGrid[i, j + 1] = opponentGrid[i, j + 1] + 10;
+                }
+            }
+        }
+
+        //Manage Hit Attacks
+        public void HitAttacks()
+        {
+            Position p;
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    p = new Position(i, j);
+                    if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
+                    {
+                        opponentGrid[i, j] = -1;
+                    }
                 }
             }
         }
@@ -152,33 +183,8 @@ namespace Project6
                 }
             }
         }
-
-        public Position nextProbable()
-        {
-            int row = 0;
-            int column = 0;
-            double currentProbability = 0;
-            double previousProbability = 0;
-           
-            //This section of code will pick the position in the grid with the highest probability of 
-            //hitting a ship with the current shipSearchLength
-            for (int i = 0; i < Game.GridSize; i++)
-            {
-                for (int j = 0; j < Game.GridSize; j++)
-                {
-                    currentProbability = opponentGrid[i, j];
-                    if (currentProbability > previousProbability)
-                    {
-                        row = i;
-                        column = j;
-                    }
-                    previousProbability = opponentGrid[i, j];
-                }
-            }
-            return new Position(row, column); //Sets the position to be attacked,
-        }
-
-        public void addToProbability()
+        /*
+        public void AddToProbability()
         {
             int shipSearchLength = 4;
             bool addToProbability = true;
@@ -271,5 +277,6 @@ namespace Project6
 
             }
         }
+        */
     }
 }
