@@ -83,7 +83,6 @@ namespace Project6
 
             AttackGridReset();
             AddToProbability();
-            SurroundingHitCell();
             MissedAttacks();
             HitAttacks();
 
@@ -115,7 +114,11 @@ namespace Project6
         /// <param name="p">Hit position</param>
         public override void Hit(Position p)
         {
-                opponentGrid[p.Row, p.Column] = 0;
+            if (!Game.ShipSunkAt(p))
+            {
+                SurroundingHitCell();
+                //opponentGrid[p.Row, p.Column] = 0;
+            }
         }
 
         //Resets Grid so that the probability doesn't get messed up
@@ -127,19 +130,32 @@ namespace Project6
                 {
                     if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4))
                     {
-                        opponentGrid[i, j] = 1;
+                        if (opponentGrid[i, j] != 10)
+                        {
+                            opponentGrid[i, j] = 1;
+                        }
+                        
                     }
                     else if (i <= (Game.GridSize / 3) && j <= (Game.GridSize / 3))
                     {
-                        opponentGrid[i, j] = 1.25;
+                        if (opponentGrid[i, j] != 10)
+                        {
+                            opponentGrid[i, j] = 1.25;
+                        }
                     }
                     else if (i <= (Game.GridSize / 2) && j <= (Game.GridSize / 2))
                     {
-                        opponentGrid[i, j] = 1.5;
+                        if (opponentGrid[i, j] != 10)
+                        {
+                            opponentGrid[i, j] = 1.5;
+                        }
                     }
                     else if (opponentGrid[i, j] >= 1)
                     {
-                        opponentGrid[i, j] = 1.75;
+                        if (opponentGrid[i, j] != 10)
+                        {
+                            opponentGrid[i, j] = 1.75;
+                        }
                     }
                 }
             }
