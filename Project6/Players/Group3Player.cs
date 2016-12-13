@@ -78,7 +78,7 @@ namespace Project6
             int row = 0;
             int column = 0;
             double currentProbability = 0;
-            double previousProbability = 0;
+            double maxProbability = 0;
             
 
             AttackGridReset();
@@ -86,7 +86,15 @@ namespace Project6
             SurroundingHitCell();
             MissedAttacks();
             HitAttacks();
-
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    Console.Write("{0} | ", opponentGrid[i, j]);
+                }
+                Console.WriteLine();
+            }
+            
 
 
 
@@ -97,15 +105,19 @@ namespace Project6
                 for (int j = 0; j < Game.GridSize; j++)
                 {
                     currentProbability = opponentGrid[i, j];
-                    if(currentProbability > previousProbability)
+                    if(currentProbability > maxProbability)
                     {
                         row = i;
                         column = j;
+                        maxProbability = currentProbability;
                     }
-                    previousProbability = opponentGrid[i, j]; 
                 }
             }
             p = new Position(row, column); //Sets the position to be attacked,
+            Console.WriteLine("{0}:{1}", currentProbability, maxProbability);
+            Console.WriteLine("{0}:{1}: {2}", row, column, p);
+            Console.WriteLine("Press Enter For next guess");
+            Console.ReadLine();
             return p;
         }
 
@@ -164,7 +176,7 @@ namespace Project6
                         if (i > 0)
                         {
                             p = new Position(i-1, j);
-                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
+                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                             {
                                 opponentGrid[i - 1, j] = opponentGrid[i - 1, j] + probabilityInt;
                             }
@@ -172,7 +184,7 @@ namespace Project6
                         if (i < Game.GridSize - 1)
                         {
                             p = new Position(i + 1, j);
-                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
+                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                             {
                                 opponentGrid[i + 1, j] = opponentGrid[i + 1, j] + probabilityInt;
                             }
@@ -181,7 +193,7 @@ namespace Project6
                         if (j > 0)
                         {
                             p = new Position(i, j - 1);
-                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
+                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                             {
                                 opponentGrid[i, j - 1] = opponentGrid[i, j - 1] + probabilityInt;
                             }
@@ -190,7 +202,7 @@ namespace Project6
                         if (j < Game.GridSize - 1)
                         {
                             p = new Position(i, j + 1);
-                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
+                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                             {
                                 opponentGrid[i, j + 1] = opponentGrid[i, j + 1] + probabilityInt;
                             }
