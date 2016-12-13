@@ -71,10 +71,7 @@ namespace Gsd311.Week6.Group3
             SurroundingHitCell();
             MissedAttacks();
             HitAttacks();
-
-
-
-
+            
             //This section of code will pick the position in the grid with the highest probability of 
             //hitting a ship with the current shipSearchLength
             for (int i = 0; i < Game.GridSize; i++)
