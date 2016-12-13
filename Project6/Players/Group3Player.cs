@@ -86,17 +86,6 @@ namespace Project6
             SurroundingHitCell();
             MissedAttacks();
             HitAttacks();
-            for (int i = 0; i < Game.GridSize; i++)
-            {
-                for (int j = 0; j < Game.GridSize; j++)
-                {
-                    Console.Write("{0} | ", opponentGrid[i, j]);
-                }
-                Console.WriteLine();
-            }
-            
-
-
 
             //This section of code will pick the position in the grid with the highest probability of 
             //hitting a ship with the current shipSearchLength
@@ -114,10 +103,6 @@ namespace Project6
                 }
             }
             p = new Position(row, column); //Sets the position to be attacked,
-            Console.WriteLine("{0}:{1}", currentProbability, maxProbability);
-            Console.WriteLine("{0}:{1}: {2}", row, column, p);
-            Console.WriteLine("Press Enter For next guess");
-            Console.ReadLine();
             return p;
         }
 
