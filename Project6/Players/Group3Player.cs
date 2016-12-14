@@ -81,10 +81,8 @@ namespace Gsd311.Week6.Group3
             double maxProbability = 0;
             
 
-            AttackGridReset();
+            //AttackGridReset();
             AddToProbability();
-            MissedAttacks();
-            HitAttacks();
 
             //This section of code will pick the position in the grid with the highest probability of 
             //hitting a ship with the current shipSearchLength
@@ -102,6 +100,10 @@ namespace Gsd311.Week6.Group3
                 }
             }
             p = new Position(row, column); //Sets the position to be attacked,
+
+            MissedAttacks();
+            HitAttacks();
+
             return p;
         }
 
@@ -120,7 +122,7 @@ namespace Gsd311.Week6.Group3
                 //opponentGrid[p.Row, p.Column] = 0;
             }
         }
-
+        
         //Resets Grid so that the probability doesn't get messed up
         public void AttackGridReset()
         {
@@ -160,7 +162,7 @@ namespace Gsd311.Week6.Group3
                 }
             }
         }
-
+        
         //Sets cells surrounding a hit cell to a high probability
         //TBD: This could use more work
         public void SurroundingHitCell ()
