@@ -4,7 +4,7 @@
 // Created          : 12-11-2016
 //
 // Last Modified By : Sean Srock
-// Last Modified On : 12-13-2016
+// Last Modified On : 12-14-2016
 // ***********************************************************************
 // <copyright file="Group3Player.cs" company="">
 //     Copyright ©  2016
@@ -23,7 +23,7 @@ namespace Gsd311.Week6.Group3
     public class Group3Player : Player
     {
         private double[,] opponentGrid;
-
+        private double levelOfAccuracy = 7;
 
         public Group3Player(String name) :
             base(name)
@@ -42,15 +42,13 @@ namespace Gsd311.Week6.Group3
             base.StartGame(game);
             opponentGrid = new double[Game.GridSize, Game.GridSize];
 
-            var levelOfAccuracy = 7;
-
             for (int i = 0; i<Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
                     opponentGrid[i, j] = levelOfAccuracy + 1;
 
-                    for (int k = levelOfAccuracy; k > 0; k--)
+                    for (double k = levelOfAccuracy; k > 0; k--)
                     {
                         if (i < k && j < k || i < k && j > k || j <= k || i >= Game.GridSize - k - 1 || j >= Game.GridSize - k - 1)
                         {
@@ -75,6 +73,7 @@ namespace Gsd311.Week6.Group3
             int column = 0;
             double currentProbability = 0;
             double maxProbability = 0;
+            bool drawAIGrid = false;
 
             //
             AddToProbability();
@@ -96,18 +95,19 @@ namespace Gsd311.Week6.Group3
                     }
                 }
             }
-
-            //Console.Clear();
-            //Draw();
-            //Console.Read();
+            if (drawAIGrid)
+            {
+                Console.Clear();
+                Draw();
+                Console.Read();
+            }
+            
             p = new Position(row, column); //Sets the position to be attacked,
             return p;
         }
 
         public void Draw()
         {
-            var grid = new Grid(Game.GridSize);
-
             // Draw top labels
             Console.Write("   ");
             for (int i = 0; i < Game.GridSize; ++i)
@@ -123,7 +123,6 @@ namespace Gsd311.Week6.Group3
                 for (int j = 0; j < Game.GridSize; j++)
                 {
                     string symbolToDraw = opponentGrid[i, j].ToString();
-                    //Console.BackgroundColor = grid.CellColors[i, j];
                     Console.Write(symbolToDraw);
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
@@ -142,63 +141,48 @@ namespace Gsd311.Week6.Group3
         {
             if (!Game.ShipSunkAt(p))
             {
-                SurroundingHitCell();
                 opponentGrid[p.Row, p.Column] = 0;
+                SurroundingHitCell(p);
             }
         }
         
         //Sets cells surrounding a hit cell to a high probability
-        //TBD: This could use more work
-        public void SurroundingHitCell ()
+        public void SurroundingHitCell (Position p)
         {
-            int probabilityInt = 5;
-            Position p;
-            for (int i = 0; i < Game.GridSize; i++)
+            Position testingPosition;
+
+            if (p.Row > 0)
             {
-                for (int j = 0; j < Game.GridSize; j++)
+                testingPosition = new Position(p.Row - 1, p.Column);
+                if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    p = new Position(i, j);
-                    if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
-                    {
-                        if (i > 0)
-                        {
-                            p = new Position(i-1, j);
-                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
-                            {
-                                opponentGrid[i - 1, j] += probabilityInt;
-                            }
-                        }
-                        if (i < Game.GridSize - 1)
-                        {
-                            p = new Position(i + 1, j);
-                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
-                            {
-                                opponentGrid[i + 1, j] += probabilityInt;
-                            }
-                        }
-                            
-                        if (j > 0)
-                        {
-                            p = new Position(i, j - 1);
-                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
-                            {
-                                opponentGrid[i, j - 1] += probabilityInt;
-                            }
-                        }
-                            
-                        if (j < Game.GridSize - 1)
-                        {
-                            p = new Position(i, j + 1);
-                            if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
-                            {
-                                opponentGrid[i, j + 1] += probabilityInt;
-                            }
-                        }
-                    } else
-                    if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.MISS)
-                    {
-                      
-                    }
+                    opponentGrid[p.Row - 1, p.Column] = levelOfAccuracy + 1;
+                }
+            }
+            if (p.Row < Game.GridSize - 1)
+            {
+                testingPosition = new Position(p.Row + 1, p.Column);
+                if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
+                {
+                    opponentGrid[p.Row + 1, p.Column] = levelOfAccuracy + 1;
+                }
+            }
+
+            if (p.Column > 0)
+            {
+                testingPosition = new Position(p.Row, p.Column - 1);
+                if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
+                {
+                    opponentGrid[p.Row, p.Column - 1] = levelOfAccuracy + 1;
+                }
+            }
+
+            if (p.Column < Game.GridSize - 1)
+            {
+                testingPosition = new Position(p.Row, p.Column + 1);
+                if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
+                {
+                    opponentGrid[p.Row, p.Column + 1] = levelOfAccuracy + 1;
                 }
             }
         }

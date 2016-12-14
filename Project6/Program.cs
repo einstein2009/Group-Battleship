@@ -4,7 +4,7 @@
 // Created          : 11-23-2016
 //
 // Last Modified By : Sean Srock
-// Last Modified On : 12-13-2016
+// Last Modified On : 12-14-2016
 // ***********************************************************************
 // <copyright file="Program.cs" company="">
 //     Copyright ©  2016
@@ -23,7 +23,7 @@ namespace Gsd311.Week6.Group3
         {
             int gridSize = 15;
             var winCriteria = BattleShipGame.WinCriteriaEnum.ALL;
-            int numTrials = 500;
+            int numTrials = 100;
 
             // Define the ships to use for testing.
             Ship[] shipsToPlace = 
@@ -37,8 +37,8 @@ namespace Gsd311.Week6.Group3
 
             // Define the AI players to test.
             IPlayer[] players = {
-                new DumbPlayer("Dumb Top Down", true),
-                new DumbPlayer("Dumb Bottom Up", false),
+                //new DumbPlayer("Dumb Top Down", true),
+                //new DumbPlayer("Dumb Bottom Up", false),
                 new RandomPlayer("Random"),
                 new Group3Player("Group3AI") //Added our player
             };
