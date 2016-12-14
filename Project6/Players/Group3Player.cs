@@ -23,7 +23,6 @@ namespace Gsd311.Week6.Group3
     public class Group3Player : Player
     {
         private double[,] opponentGrid;
-        private double levelOfAccuracy = 7;
 
         public Group3Player(String name) :
             base(name)
@@ -46,15 +45,58 @@ namespace Gsd311.Week6.Group3
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    opponentGrid[i, j] = levelOfAccuracy + 1;
+                    opponentGrid[i, j] = 7;
 
+                    double Accuracy;
+
+
+                    Accuracy = Math.Ceiling(Game.GridSize / 2.5d);
+                    if (i < Accuracy && j < Accuracy || i < Accuracy && j >= Accuracy || j < Accuracy || i > Game.GridSize - Accuracy - 1 || j > Game.GridSize - Accuracy - 1)
+                    {
+                        opponentGrid[i, j] = 1;
+                    }
+
+                    Accuracy = Math.Ceiling(Game.GridSize / 3.5d);
+                    if (i < Accuracy && j < Accuracy || i < Accuracy && j >= Accuracy || j < Accuracy || i > Game.GridSize - Accuracy - 1 || j > Game.GridSize - Accuracy - 1)
+                    {
+                        opponentGrid[i, j] = 4;
+                    }
+
+                    Accuracy = Math.Ceiling(Game.GridSize / 4d);
+                    if (i < Accuracy && j < Accuracy || i < Accuracy && j >= Accuracy || j < Accuracy || i > Game.GridSize - Accuracy - 1 || j > Game.GridSize - Accuracy - 1)
+                    {
+                        opponentGrid[i, j] = 6;
+                    }
+
+                    Accuracy = Math.Ceiling(Game.GridSize / 6d);
+                    if (i < Accuracy && j < Accuracy || i < Accuracy && j >= Accuracy || j < Accuracy || i > Game.GridSize - Accuracy - 1 || j > Game.GridSize - Accuracy - 1)
+                    {
+                        opponentGrid[i, j] = 3;
+                    }
+
+                    Accuracy = Math.Ceiling(Game.GridSize / 8d);
+                    if (i < Accuracy && j < Accuracy || i < Accuracy && j >= Accuracy || j < Accuracy || i > Game.GridSize - Accuracy - 1 || j > Game.GridSize - Accuracy - 1)
+                    {
+                        opponentGrid[i, j] = 5;
+                    }
+
+                    Accuracy = Math.Floor(Game.GridSize / 10d);
+                    if (i < Accuracy && j < Accuracy || i < Accuracy && j >= Accuracy || j < Accuracy || i > Game.GridSize - Accuracy - 1 || j > Game.GridSize - Accuracy - 1)
+                    {
+                        opponentGrid[i, j] = 2;
+                    }
+
+                    
+
+
+                    /*
                     for (double k = levelOfAccuracy; k > 0; k--)
                     {
                         if (i < k && j < k || i < k && j > k || j <= k || i >= Game.GridSize - k - 1 || j >= Game.GridSize - k - 1)
                         {
                             opponentGrid[i, j] = k;
                         }
-                    }
+                    }*/
                 }
             }
             
@@ -68,13 +110,19 @@ namespace Gsd311.Week6.Group3
         /// <returns>Position to attack for the turn.</returns>
         public override Position Attack()
         {
-            Position p;
-            int row = 0;
-            int column = 0;
-            double currentProbability = 0;
-            double maxProbability = 0;
             bool drawAIGrid = false;
 
+            Random rnd = new Random();
+
+            double currentProbability = 0;
+            double maxProbability = 0;
+
+            int tempSpaces = 0;
+            int numOfSpaces = (Game.GridSize + 1) *(Game.GridSize + 1);
+
+            Position[] posList = new Position[numOfSpaces];
+            Position[] posListCurrent = new Position[numOfSpaces];
+            
             //
             AddToProbability();
             MissedAttacks();
@@ -89,21 +137,55 @@ namespace Gsd311.Week6.Group3
                     currentProbability = opponentGrid[i, j];
                     if(currentProbability > maxProbability)
                     {
-                        row = i;
-                        column = j;
+                        //row = i;
+                        //column = j;
                         maxProbability = currentProbability;
                     }
                 }
             }
+
+            // Generate an array with all of the positions for quick parsing.
+            tempSpaces = 0;
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    
+                    tempSpaces++;
+                    posList[tempSpaces] = new Position(i, j);
+                }
+            }
+
+            // Create a new array for storing the results that are the max probability.
+            tempSpaces = -1;
+            for (int i = 0; i < numOfSpaces; i++)
+            {
+                if (opponentGrid[posList[i].Row, posList[i].Column] == maxProbability)
+                {
+                    tempSpaces++;
+                    posListCurrent[tempSpaces] = posList[i];
+                }
+            }
+            Array.Resize(ref posListCurrent, tempSpaces+1);
+            
+            int randomNumber = rnd.Next(0, tempSpaces); 
+
             if (drawAIGrid)
             {
                 Console.Clear();
                 Draw();
+                Console.WriteLine(maxProbability);
+                Console.WriteLine(numOfSpaces);
+                Console.WriteLine(tempSpaces);
+                Console.WriteLine(randomNumber);
+                if (posListCurrent.Length>0)
+                {
+                    Console.WriteLine(posListCurrent[randomNumber].Row + "," + posListCurrent[randomNumber].Column);
+                }
                 Console.Read();
             }
-            
-            p = new Position(row, column); //Sets the position to be attacked,
-            return p;
+
+            return posListCurrent[randomNumber];
         }
 
         public void Draw()
@@ -144,6 +226,10 @@ namespace Gsd311.Week6.Group3
                 opponentGrid[p.Row, p.Column] = 0;
                 SurroundingHitCell(p);
             }
+            else
+            {
+                opponentGrid[p.Row, p.Column] = 0;
+            }
         }
         
         //Sets cells surrounding a hit cell to a high probability
@@ -156,7 +242,7 @@ namespace Gsd311.Week6.Group3
                 testingPosition = new Position(p.Row - 1, p.Column);
                 if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    opponentGrid[p.Row - 1, p.Column] = levelOfAccuracy + 1;
+                    opponentGrid[p.Row - 1, p.Column] = 15;
                 }
             }
             if (p.Row < Game.GridSize - 1)
@@ -164,7 +250,7 @@ namespace Gsd311.Week6.Group3
                 testingPosition = new Position(p.Row + 1, p.Column);
                 if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    opponentGrid[p.Row + 1, p.Column] = levelOfAccuracy + 1;
+                    opponentGrid[p.Row + 1, p.Column] = 15;
                 }
             }
 
@@ -173,7 +259,7 @@ namespace Gsd311.Week6.Group3
                 testingPosition = new Position(p.Row, p.Column - 1);
                 if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    opponentGrid[p.Row, p.Column - 1] = levelOfAccuracy + 1;
+                    opponentGrid[p.Row, p.Column - 1] = 15;
                 }
             }
 
@@ -182,7 +268,7 @@ namespace Gsd311.Week6.Group3
                 testingPosition = new Position(p.Row, p.Column + 1);
                 if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    opponentGrid[p.Row, p.Column + 1] = levelOfAccuracy + 1;
+                    opponentGrid[p.Row, p.Column + 1] = 15;
                 }
             }
         }
