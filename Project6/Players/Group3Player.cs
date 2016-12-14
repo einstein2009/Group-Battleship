@@ -110,6 +110,7 @@ namespace Gsd311.Week6.Group3
         /// <returns>Position to attack for the turn.</returns>
         public override Position Attack()
         {
+            // if drawAIGrid is true, it will draw every step of the AI's process to the screen.
             bool drawAIGrid = false;
 
             Random rnd = new Random();
@@ -174,13 +175,13 @@ namespace Gsd311.Week6.Group3
             {
                 Console.Clear();
                 Draw();
-                Console.WriteLine(maxProbability);
-                Console.WriteLine(numOfSpaces);
-                Console.WriteLine(tempSpaces);
-                Console.WriteLine(randomNumber);
+                Console.WriteLine("Max Probability: " + maxProbability);
+                Console.WriteLine("Positions in grid: " + numOfSpaces);
+                Console.WriteLine("Positions at max probability: " + tempSpaces);
+                Console.WriteLine("Random number within limit: " + randomNumber);
                 if (posListCurrent.Length>0)
                 {
-                    Console.WriteLine(posListCurrent[randomNumber].Row + "," + posListCurrent[randomNumber].Column);
+                    Console.WriteLine("Random Position acquired: " + posListCurrent[randomNumber].Row + "," + posListCurrent[randomNumber].Column);
                 }
                 Console.Read();
             }
