@@ -41,26 +41,21 @@ namespace Gsd311.Week6.Group3
         {
             base.StartGame(game);
             opponentGrid = new double[Game.GridSize, Game.GridSize];
-            
+
+            var levelOfAccuracy = 7;
+
             for (int i = 0; i<Game.GridSize; i++)
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    if (i <= Math.Ceiling(Game.GridSize / 6d) && j <= Math.Ceiling(Game.GridSize / 6d))
+                    opponentGrid[i, j] = levelOfAccuracy + 1;
+
+                    for (int k = levelOfAccuracy; k > 0; k--)
                     {
-                        opponentGrid[i, j] = 1;
-                    }
-                    else if (i <= Math.Ceiling(Game.GridSize / 4d) && j <= Math.Ceiling(Game.GridSize / 4d))
-                    {
-                        opponentGrid[i, j] = 2;
-                    }
-                    else if (i <= Math.Ceiling(Game.GridSize / 2d) && j <= Math.Ceiling(Game.GridSize / 2d))
-                    {
-                        opponentGrid[i, j] = 3;
-                    }
-                    else
-                    {
-                        opponentGrid[i, j] = 4;
+                        if (i < k && j < k || i < k && j > k || j <= k || i >= Game.GridSize - k - 1 || j >= Game.GridSize - k - 1)
+                        {
+                            opponentGrid[i, j] = k;
+                        }
                     }
                 }
             }
@@ -80,7 +75,8 @@ namespace Gsd311.Week6.Group3
             int column = 0;
             double currentProbability = 0;
             double maxProbability = 0;
-            
+
+            //
             AddToProbability();
             MissedAttacks();
             HitAttacks();
@@ -101,9 +97,9 @@ namespace Gsd311.Week6.Group3
                 }
             }
 
-            Console.Clear();
-            Draw();
-            Console.Read();
+            //Console.Clear();
+            //Draw();
+            //Console.Read();
             p = new Position(row, column); //Sets the position to be attacked,
             return p;
         }
@@ -127,7 +123,7 @@ namespace Gsd311.Week6.Group3
                 for (int j = 0; j < Game.GridSize; j++)
                 {
                     string symbolToDraw = opponentGrid[i, j].ToString();
-                    Console.BackgroundColor = grid.CellColors[i, j];
+                    //Console.BackgroundColor = grid.CellColors[i, j];
                     Console.Write(symbolToDraw);
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
@@ -169,7 +165,7 @@ namespace Gsd311.Week6.Group3
                             p = new Position(i-1, j);
                             if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                             {
-                                opponentGrid[i - 1, j] = opponentGrid[i - 1, j] + probabilityInt;
+                                opponentGrid[i - 1, j] += probabilityInt;
                             }
                         }
                         if (i < Game.GridSize - 1)
@@ -177,7 +173,7 @@ namespace Gsd311.Week6.Group3
                             p = new Position(i + 1, j);
                             if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                             {
-                                opponentGrid[i + 1, j] = opponentGrid[i + 1, j] + probabilityInt;
+                                opponentGrid[i + 1, j] += probabilityInt;
                             }
                         }
                             
@@ -186,7 +182,7 @@ namespace Gsd311.Week6.Group3
                             p = new Position(i, j - 1);
                             if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                             {
-                                opponentGrid[i, j - 1] = opponentGrid[i, j - 1] + probabilityInt;
+                                opponentGrid[i, j - 1] += probabilityInt;
                             }
                         }
                             
@@ -195,7 +191,7 @@ namespace Gsd311.Week6.Group3
                             p = new Position(i, j + 1);
                             if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                             {
-                                opponentGrid[i, j + 1] = opponentGrid[i, j + 1] + probabilityInt;
+                                opponentGrid[i, j + 1] += probabilityInt;
                             }
                         }
                     } else

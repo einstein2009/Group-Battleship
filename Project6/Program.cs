@@ -23,7 +23,7 @@ namespace Gsd311.Week6.Group3
         {
             int gridSize = 15;
             var winCriteria = BattleShipGame.WinCriteriaEnum.ALL;
-            int numTrials = 1;
+            int numTrials = 500;
 
             // Define the ships to use for testing.
             Ship[] shipsToPlace = 
@@ -37,9 +37,9 @@ namespace Gsd311.Week6.Group3
 
             // Define the AI players to test.
             IPlayer[] players = {
-                //new DumbPlayer("Dumb Top Down", true),
-                //new DumbPlayer("Dumb Bottom Up", false),
-                //new RandomPlayer("Random"),
+                new DumbPlayer("Dumb Top Down", true),
+                new DumbPlayer("Dumb Bottom Up", false),
+                new RandomPlayer("Random"),
                 new Group3Player("Group3AI") //Added our player
             };
             
