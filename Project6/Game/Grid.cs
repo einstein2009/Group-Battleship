@@ -21,8 +21,8 @@ namespace Gsd311.Week6.Group3
     internal class Grid
     {
         public int GridSize { get; }
-        private char[,] CellSymbols;  // Ship symbol, '.' if sea and 'X' if bombed
-        private ConsoleColor[,] CellColors;
+        public char[,] CellSymbols;  // Ship symbol, '.' if sea and 'X' if bombed,public for testing
+        public ConsoleColor[,] CellColors; //public for testing
         public const string ColumnLabels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         /// <summary>

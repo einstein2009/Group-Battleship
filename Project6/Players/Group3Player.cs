@@ -3,8 +3,8 @@
 // Author           : Matthew Wyant
 // Created          : 12-11-2016
 //
-// Last Modified By : Matthew Wyant
-// Last Modified On : 12-12-2016
+// Last Modified By : Sean Srock
+// Last Modified On : 12-13-2016
 // ***********************************************************************
 // <copyright file="Group3Player.cs" company="">
 //     Copyright ©  2016
@@ -46,21 +46,21 @@ namespace Gsd311.Week6.Group3
             {
                 for (int j = 0; j < Game.GridSize; j++)
                 {
-                    if (i <= (Game.GridSize / 6) && j <= (Game.GridSize / 6))
+                    if (i <= Math.Ceiling(Game.GridSize / 6d) && j <= Math.Ceiling(Game.GridSize / 6d))
                     {
                         opponentGrid[i, j] = 1;
                     }
-                    else if (i <= (Game.GridSize / 4) && j <= (Game.GridSize / 4))
+                    else if (i <= Math.Ceiling(Game.GridSize / 4d) && j <= Math.Ceiling(Game.GridSize / 4d))
                     {
-                        opponentGrid[i, j] = 1;
+                        opponentGrid[i, j] = 2;
                     }
-                    else if (i <= (Game.GridSize / 2) && j <= (Game.GridSize / 2))
+                    else if (i <= Math.Ceiling(Game.GridSize / 2d) && j <= Math.Ceiling(Game.GridSize / 2d))
                     {
-                        opponentGrid[i, j] = 1;
+                        opponentGrid[i, j] = 3;
                     }
                     else
                     {
-                        opponentGrid[i, j] = 2;
+                        opponentGrid[i, j] = 4;
                     }
                 }
             }
@@ -100,8 +100,39 @@ namespace Gsd311.Week6.Group3
                     }
                 }
             }
+
+            Console.Clear();
+            Draw();
+            Console.Read();
             p = new Position(row, column); //Sets the position to be attacked,
             return p;
+        }
+
+        public void Draw()
+        {
+            var grid = new Grid(Game.GridSize);
+
+            // Draw top labels
+            Console.Write("   ");
+            for (int i = 0; i < Game.GridSize; ++i)
+            {
+                Console.Write(Grid.ColumnLabels[i]);
+            }
+            Console.WriteLine();
+
+            // Draw row
+            for (int i = 0; i < Game.GridSize; i++)
+            {
+                Console.Write((i + 1).ToString("00") + " ");
+                for (int j = 0; j < Game.GridSize; j++)
+                {
+                    string symbolToDraw = opponentGrid[i, j].ToString();
+                    Console.BackgroundColor = grid.CellColors[i, j];
+                    Console.Write(symbolToDraw);
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+                Console.WriteLine();
+            }
         }
 
         /// <summary>
@@ -124,7 +155,7 @@ namespace Gsd311.Week6.Group3
         //TBD: This could use more work
         public void SurroundingHitCell ()
         {
-            int probabilityInt = 0;
+            int probabilityInt = 5;
             Position p;
             for (int i = 0; i < Game.GridSize; i++)
             {
@@ -167,7 +198,7 @@ namespace Gsd311.Week6.Group3
                                 opponentGrid[i, j + 1] = opponentGrid[i, j + 1] + probabilityInt;
                             }
                         }
-                    }
+                    } else
                     if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.MISS)
                     {
                       
