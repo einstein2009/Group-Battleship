@@ -22,7 +22,7 @@ namespace Gsd311.Week6.Group3
         static void Main(string[] args)
         {
             int gridSize = 15;
-            var winCriteria = BattleShipGame.WinCriteriaEnum.ALL;
+            var winCriteria = BattleShipGame.WinCriteriaEnum.BATTLESHIP;
             int numTrials = 100;
 
             // Define the ships to use for testing.

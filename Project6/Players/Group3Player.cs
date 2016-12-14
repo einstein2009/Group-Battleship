@@ -49,7 +49,6 @@ namespace Gsd311.Week6.Group3
 
                     double Accuracy;
 
-
                     Accuracy = Math.Ceiling(Game.GridSize / 2.5d);
                     if (i < Accuracy && j < Accuracy || i < Accuracy && j >= Accuracy || j < Accuracy || i > Game.GridSize - Accuracy - 1 || j > Game.GridSize - Accuracy - 1)
                     {
@@ -85,21 +84,8 @@ namespace Gsd311.Week6.Group3
                     {
                         opponentGrid[i, j] = 2;
                     }
-
-                    
-
-
-                    /*
-                    for (double k = levelOfAccuracy; k > 0; k--)
-                    {
-                        if (i < k && j < k || i < k && j > k || j <= k || i >= Game.GridSize - k - 1 || j >= Game.GridSize - k - 1)
-                        {
-                            opponentGrid[i, j] = k;
-                        }
-                    }*/
                 }
             }
-            
         }
 
         /// <summary>
