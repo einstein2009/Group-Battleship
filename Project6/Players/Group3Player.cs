@@ -64,7 +64,7 @@ namespace Gsd311.Week6.Group3
                     Accuracy = Math.Ceiling(Game.GridSize / 4d);
                     if (i < Accuracy && j < Accuracy || i < Accuracy && j >= Accuracy || j < Accuracy || i > Game.GridSize - Accuracy - 1 || j > Game.GridSize - Accuracy - 1)
                     {
-                        opponentGrid[i, j] = 6;
+                        opponentGrid[i, j] = 7;
                     }
 
                     Accuracy = Math.Ceiling(Game.GridSize / 6d);
@@ -111,7 +111,7 @@ namespace Gsd311.Week6.Group3
             Position[] posListCurrent = new Position[numOfSpaces];
             
             //
-            AddToProbability();
+            
             MissedAttacks();
             HitAttacks();
 
@@ -212,6 +212,7 @@ namespace Gsd311.Week6.Group3
             {
                 opponentGrid[p.Row, p.Column] = 0;
                 SurroundingHitCell(p);
+                AddToProbability(p);
             }
             else
             {
@@ -223,13 +224,14 @@ namespace Gsd311.Week6.Group3
         public void SurroundingHitCell (Position p)
         {
             Position testingPosition;
+            double testAmt = 5;
 
             if (p.Row > 0)
             {
                 testingPosition = new Position(p.Row - 1, p.Column);
                 if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    opponentGrid[p.Row - 1, p.Column] = 15;
+                    opponentGrid[p.Row - 1, p.Column] += testAmt;
                 }
             }
             if (p.Row < Game.GridSize - 1)
@@ -237,7 +239,7 @@ namespace Gsd311.Week6.Group3
                 testingPosition = new Position(p.Row + 1, p.Column);
                 if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    opponentGrid[p.Row + 1, p.Column] = 15;
+                    opponentGrid[p.Row + 1, p.Column] += testAmt;
                 }
             }
 
@@ -246,7 +248,7 @@ namespace Gsd311.Week6.Group3
                 testingPosition = new Position(p.Row, p.Column - 1);
                 if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    opponentGrid[p.Row, p.Column - 1] = 15;
+                    opponentGrid[p.Row, p.Column - 1] += testAmt;
                 }
             }
 
@@ -255,7 +257,7 @@ namespace Gsd311.Week6.Group3
                 testingPosition = new Position(p.Row, p.Column + 1);
                 if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                 {
-                    opponentGrid[p.Row, p.Column + 1] = 15;
+                    opponentGrid[p.Row, p.Column + 1] += testAmt;
                 }
             }
         }
@@ -289,102 +291,136 @@ namespace Gsd311.Week6.Group3
                     if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.HIT)
                     {
                         opponentGrid[i, j] = 0;
+                        if (Game.ShipSunkAt(p))
+                        {
+                            for (int k = 0; k < Game.GridSize; k++)
+                            {
+                                for (int l = 0; l < Game.GridSize; l++)
+                                {
+                                    opponentGrid[k, l] = Math.Floor(opponentGrid[k, l]);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
         //Manage Ship probability
-        //TBD This section stills needs lots of work
-        public void AddToProbability()
+        public void AddToProbability(Position p)
         {
-            int shipSearchLength = 4;
+            int shipSearchLength = 0;
             bool addToProbability = true;
-            Position p;
+            Position testingPosition;
 
-            //foreach ()
-
-            for (int i = 0; i < Game.GridSize; i++)
+            if (Game.WinCriteria == BattleShipGame.WinCriteriaEnum.ALL)
             {
-                for (int j = 0; j < Game.GridSize; j++)
+                shipSearchLength = 2;
+            }
+            else if (Game.WinCriteria == BattleShipGame.WinCriteriaEnum.BATTLESHIP)
+            {
+                shipSearchLength = 2;
+            }
+
+            // Check left
+            if (p.Row - shipSearchLength > 0)
+            {
+                addToProbability = true;
+
+                for (int i = 0; i < shipSearchLength; i++)
                 {
-                    p = new Position(i, j);
-                    if (Game.HitOrMissAt(p) == BattleShipGame.HitOrMissEnum.MISS)
+                    testingPosition = new Position(p.Row - i, p.Column);
+                    if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.MISS || Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.HIT)
                     {
-                        //Checks cells to the right
-                        for (int s = 0; s < shipSearchLength; s++)
+                        addToProbability = false;
+                    }
+                }
+                if (addToProbability)
+                {
+                    for (int i = 0; i < shipSearchLength; i++)
+                    {
+                        testingPosition = new Position(p.Row - i, p.Column);
+                        if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                         {
-                            p = new Position(i, j + s);
-                            if(j + s < Game.GridSize)
-                            {
-                                if (Game.HitOrMissAt(p) != BattleShipGame.HitOrMissEnum.UNKNOWN)
-                                {
-                                    addToProbability = false;
-                                }
-                            }
-                            else
-                            {
-                                addToProbability = false;
-                            }
+                            opponentGrid[p.Row - i, p.Column] += 0.05;
                         }
+                    }
+                }
+            }
 
-                        //Checks cells to the left
-                        for (int s = 0; s < shipSearchLength; s++)
-                        {
-                            p = new Position(i, j - s);
-                            if (j - s > Game.GridSize)
-                            {
-                                if (Game.HitOrMissAt(p) != BattleShipGame.HitOrMissEnum.UNKNOWN)
-                                {
-                                    addToProbability = false;
-                                }
-                            }
-                            else
-                            {
-                                addToProbability = false;
-                            }
-                        }
+            // Check Right
+            if (p.Row + shipSearchLength < Game.GridSize - 1)
+            {
+                addToProbability = true;
 
-                        //Checks cells down
-                        for (int s = 0; s < shipSearchLength; s++)
+                for (int i = 0; i < shipSearchLength; i++)
+                {
+                    testingPosition = new Position(p.Row + i, p.Column);
+                    if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.MISS || Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.HIT)
+                    {
+                        addToProbability = false;
+                    }
+                }
+                if (addToProbability)
+                {
+                    for (int i = 0; i < shipSearchLength; i++)
+                    {
+                        testingPosition = new Position(p.Row + i, p.Column);
+                        if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                         {
-                            p = new Position(i + s, j);
-                            if (i + s < Game.GridSize)
-                            {
-                                if (Game.HitOrMissAt(p) != BattleShipGame.HitOrMissEnum.UNKNOWN)
-                                {
-                                    addToProbability = false;
-                                }
-                            }
-                            else
-                            {
-                                addToProbability = false;
-                            }
+                            opponentGrid[p.Row + i, p.Column] += 0.05;
                         }
+                    }
+                }
+            }
 
-                        //Checks cells up
-                        for (int s = 0; s < shipSearchLength; s++)
+            // Check Down
+            if (p.Column + shipSearchLength < Game.GridSize - 1)
+            {
+                addToProbability = true;
+
+                for (int i = 0; i < shipSearchLength; i++)
+                {
+                    testingPosition = new Position(p.Row, p.Column + i);
+                    if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.MISS || Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.HIT)
+                    {
+                        addToProbability = false;
+                    }
+                }
+                if (addToProbability)
+                {
+                    for (int i = 0; i < shipSearchLength; i++)
+                    {
+                        testingPosition = new Position(p.Row, p.Column + i);
+                        if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                         {
-                            p = new Position(i - s, j);
-                            if (i - s > Game.GridSize)
-                            {
-                                if (Game.HitOrMissAt(p) != BattleShipGame.HitOrMissEnum.UNKNOWN)
-                                {
-                                    addToProbability = false;
-                                }
-                            }
-                            else
-                            {
-                                addToProbability = false;
-                            }
+                            opponentGrid[p.Row, p.Column + i] += 0.05;
                         }
-                        if (addToProbability)
+                    }
+                }
+            }
+
+            // Check Up
+            if (p.Column - shipSearchLength > 0)
+            {
+                addToProbability = true;
+
+                for (int i = 0; i < shipSearchLength; i++)
+                {
+                    testingPosition = new Position(p.Row, p.Column - i);
+                    if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.MISS || Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.HIT)
+                    {
+                        addToProbability = false;
+                    }
+                }
+                if (addToProbability)
+                {
+                    for (int i = 0; i < shipSearchLength; i++)
+                    {
+                        testingPosition = new Position(p.Row, p.Column - i);
+                        if (Game.HitOrMissAt(testingPosition) == BattleShipGame.HitOrMissEnum.UNKNOWN)
                         {
-                            opponentGrid[i, j] = opponentGrid[i, j] + 2;
-                        }
-                        else
-                        {
-                            addToProbability = true;
+                            opponentGrid[p.Row, p.Column - i] += 0.05;
                         }
                     }
                 }
