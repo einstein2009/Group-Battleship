@@ -96,8 +96,6 @@ namespace Gsd311.Week6.Group3
         /// <returns>Position to attack for the turn.</returns>
         public override Position Attack()
         {
-            // if drawAIGrid is true, it will draw every step of the AI's process to the screen.
-            bool drawAIGrid = false;
 
             Random rnd = new Random();
 
@@ -157,46 +155,7 @@ namespace Gsd311.Week6.Group3
             
             int randomNumber = rnd.Next(0, tempSpaces); 
 
-            if (drawAIGrid)
-            {
-                Console.Clear();
-                Draw();
-                Console.WriteLine("Max Probability: " + maxProbability);
-                Console.WriteLine("Positions in grid: " + numOfSpaces);
-                Console.WriteLine("Positions at max probability: " + tempSpaces);
-                Console.WriteLine("Random number within limit: " + randomNumber);
-                if (posListCurrent.Length>0)
-                {
-                    Console.WriteLine("Random Position acquired: " + posListCurrent[randomNumber].Row + "," + posListCurrent[randomNumber].Column);
-                }
-                Console.Read();
-            }
-
             return posListCurrent[randomNumber];
-        }
-
-        public void Draw()
-        {
-            // Draw top labels
-            Console.Write("   ");
-            for (int i = 0; i < Game.GridSize; ++i)
-            {
-                Console.Write(Grid.ColumnLabels[i]);
-            }
-            Console.WriteLine();
-
-            // Draw row
-            for (int i = 0; i < Game.GridSize; i++)
-            {
-                Console.Write((i + 1).ToString("00") + " ");
-                for (int j = 0; j < Game.GridSize; j++)
-                {
-                    string symbolToDraw = opponentGrid[i, j].ToString();
-                    Console.Write(symbolToDraw);
-                    Console.BackgroundColor = ConsoleColor.Black;
-                }
-                Console.WriteLine();
-            }
         }
 
         /// <summary>
